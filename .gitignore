@@ -39,3 +39,5 @@ git-src
 !/dl/datconf*
 !/dl/mt79*
 !/dl/warp*
+.config.bak
+prepare.log
