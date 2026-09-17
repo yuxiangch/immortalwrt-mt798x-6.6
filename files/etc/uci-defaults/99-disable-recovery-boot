@@ -1,0 +1,18 @@
+#!/bin/sh
+
+[ -x /usr/sbin/fw_setenv ] || exit 0
+[ -e /etc/fw_env.config ] || exit 0
+
+current_bootcmd="$(fw_printenv -n bootcmd 2>/dev/null)"
+current_boot_emmc="$(fw_printenv -n boot_emmc 2>/dev/null)"
+
+# 已经是目标值，跳过
+if [ "$current_bootcmd" = "run boot_production" ] && \
+   [ "$current_boot_emmc" = "run boot_production" ]; then
+	exit 0
+fi
+
+fw_setenv bootcmd "run boot_production" 2>/dev/null
+fw_setenv boot_emmc "run boot_production" 2>/dev/null
+
+exit 0

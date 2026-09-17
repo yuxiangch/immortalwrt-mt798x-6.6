@@ -1,6 +1,6 @@
-From a70b67d1500caf6b304a7df1252dc9a3a4e4a0d7 Mon Sep 17 00:00:00 2001
+From 58ea728a1e27f5c8a5b36b34ff5a7b4b6190ec23 Mon Sep 17 00:00:00 2001
 From: Bo-Cun Chen <bc-bocun.chen@mediatek.com>
-Date: Tue, 10 Dec 2024 10:00:57 +0800
+Date: Mon, 13 Oct 2025 11:43:00 +0800
 Subject: [PATCH] net: phy: aquantia: add mib debugfs
 
 The users can utilize following command to dump the MIB information
@@ -22,6 +22,8 @@ Signed-off-by: Bo-Cun Chen <bc-bocun.chen@mediatek.com>
  4 files changed, 187 insertions(+), 1 deletion(-)
  create mode 100644 drivers/net/phy/aquantia/aquantia_mib.c
 
+diff --git a/drivers/net/phy/aquantia/Makefile b/drivers/net/phy/aquantia/Makefile
+index c6c4d49..fc44429 100644
 --- a/drivers/net/phy/aquantia/Makefile
 +++ b/drivers/net/phy/aquantia/Makefile
 @@ -1,5 +1,5 @@
@@ -31,9 +33,11 @@ Signed-off-by: Bo-Cun Chen <bc-bocun.chen@mediatek.com>
  ifdef CONFIG_HWMON
  aquantia-objs			+= aquantia_hwmon.o
  endif
+diff --git a/drivers/net/phy/aquantia/aquantia.h b/drivers/net/phy/aquantia/aquantia.h
+index 5b2d4a1..bcd7f5e 100644
 --- a/drivers/net/phy/aquantia/aquantia.h
 +++ b/drivers/net/phy/aquantia/aquantia.h
-@@ -166,10 +166,25 @@ static const struct aqr107_hw_stat aqr10
+@@ -166,10 +166,25 @@ static const struct aqr107_hw_stat aqr107_hw_stats[] = {
  
  #define AQR107_SGMII_STAT_SZ ARRAY_SIZE(aqr107_hw_stats)
  
@@ -59,7 +63,7 @@ Signed-off-by: Bo-Cun Chen <bc-bocun.chen@mediatek.com>
  };
  
  #if IS_REACHABLE(CONFIG_HWMON)
-@@ -178,6 +193,8 @@ int aqr_hwmon_probe(struct phy_device *p
+@@ -178,6 +193,8 @@ int aqr_hwmon_probe(struct phy_device *phydev);
  static inline int aqr_hwmon_probe(struct phy_device *phydev) { return 0; }
  #endif
  
@@ -68,17 +72,22 @@ Signed-off-by: Bo-Cun Chen <bc-bocun.chen@mediatek.com>
  int aqr_firmware_load(struct phy_device *phydev);
  
  int aqr_phy_led_blink_set(struct phy_device *phydev, u8 index,
+diff --git a/drivers/net/phy/aquantia/aquantia_main.c b/drivers/net/phy/aquantia/aquantia_main.c
+index 6daba30..804e10b 100644
 --- a/drivers/net/phy/aquantia/aquantia_main.c
 +++ b/drivers/net/phy/aquantia/aquantia_main.c
-@@ -784,6 +784,8 @@ static int aqr107_probe(struct phy_devic
- 	if (ret)
- 		return ret;
+@@ -780,6 +780,8 @@ static int aqr107_probe(struct phy_device *phydev)
+ 
+ 	aqr_firmware_load(phydev);
  
 +	aqr_mib_probe(phydev);
 +
  	return aqr_hwmon_probe(phydev);
  }
  
+diff --git a/drivers/net/phy/aquantia/aquantia_mib.c b/drivers/net/phy/aquantia/aquantia_mib.c
+new file mode 100644
+index 0000000..99c5237
 --- /dev/null
 +++ b/drivers/net/phy/aquantia/aquantia_mib.c
 @@ -0,0 +1,167 @@
@@ -249,3 +258,6 @@ Signed-off-by: Bo-Cun Chen <bc-bocun.chen@mediatek.com>
 +
 +	return 0;
 +}
+-- 
+2.45.2
+

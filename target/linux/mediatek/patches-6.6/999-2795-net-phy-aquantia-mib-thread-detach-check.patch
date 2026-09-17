@@ -1,0 +1,20 @@
+--- a/drivers/net/phy/aquantia/aquantia_mib.c
++++ b/drivers/net/phy/aquantia/aquantia_mib.c
+@@ -163,6 +163,16 @@ static int aqr107_mib_thread(void *data)
+ 	for (;;) {
+ 		if (kthread_should_stop())
+ 			break;
+ 
++		/*
++		 * The PHY may have been detached from its netdev
++		 * (interface down, system reboot, SFP removal, etc).
++		 * In that case the MDIO bus mutex has been released
++		 * and accessing PHY registers would trigger a kernel
++		 * panic. Exit the thread immediately.
++		 */
++		if (!phydev->attached_dev)
++			break;
++
+ 		aqr107_mib_read(phydev);
+ 
+ 		set_current_state(TASK_INTERRUPTIBLE);
