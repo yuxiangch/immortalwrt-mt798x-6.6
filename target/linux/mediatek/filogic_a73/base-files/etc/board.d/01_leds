@@ -8,10 +8,10 @@ board_config_update
 case $board in
 bananapi,bpi-r4|\
 bananapi,bpi-r4-poe)
-	ucidef_set_led_netdev "lan0" "lan0" "mt7530-0:00:green:lan" "lan0" "link tx rx"
-	ucidef_set_led_netdev "lan1" "lan1" "mt7530-0:01:green:lan" "lan1" "link tx rx"
-	ucidef_set_led_netdev "lan2" "lan2" "mt7530-0:02:green:lan" "lan2" "link tx rx"
-	ucidef_set_led_netdev "lan3" "lan3" "mt7530-0:03:green:lan" "lan3" "link tx rx"
+	ucidef_set_led_netdev "lan0" "lan0" "mt7530-0:00:lan0-green" "lan0" "link tx rx"
+	ucidef_set_led_netdev "lan1" "lan1" "mt7530-0:01:lan1-green" "lan1" "link tx rx"
+	ucidef_set_led_netdev "lan2" "lan2" "mt7530-0:02:lan2-green" "lan2" "link tx rx"
+	ucidef_set_led_netdev "lan3" "lan3" "mt7530-0:03:lan3-green" "lan3" "link tx rx"
 	;;
 smartrg,sdg-8733|\
 smartrg,sdg-8734)

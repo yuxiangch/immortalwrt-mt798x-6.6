@@ -104,6 +104,7 @@
 &gsw_phy0_led0 {
 	status = "okay";
 	color = <LED_COLOR_ID_GREEN>;
+        label = "lan0-green";
 };
 
 &gsw_phy1 {
@@ -114,6 +115,7 @@
 &gsw_phy1_led0 {
 	status = "okay";
 	color = <LED_COLOR_ID_GREEN>;
+        label = "lan1-green";
 };
 
 &gsw_phy2 {
@@ -124,6 +126,7 @@
 &gsw_phy2_led0 {
 	status = "okay";
 	color = <LED_COLOR_ID_GREEN>;
+        label = "lan2-green";
 };
 
 &gsw_phy3 {
@@ -134,6 +137,7 @@
 &gsw_phy3_led0 {
 	status = "okay";
 	color = <LED_COLOR_ID_GREEN>;
+        label = "lan3-green";
 };
 
 &cpu0 {
