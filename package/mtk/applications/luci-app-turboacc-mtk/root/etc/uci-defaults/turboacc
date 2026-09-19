@@ -33,11 +33,10 @@ else
 	uci -q set "turboacc.config.fastpath"="none"
 fi
 
-if has_module_file "xt_FULLCONENAT"; then
-	uci -q set "turboacc.config.fullcone"="1"
-else
-	uci -q set "turboacc.config.fullcone"="2"
-fi
+# FullCone comes from the kernel conntrack NAT mode sysctl, not from an xtables
+# target, so there is no module to probe for any more.  1 is the kernel default
+# and the value existing installations already use.
+uci -q set "turboacc.config.fullcone"="1"
 
 uci -q commit "turboacc"
 

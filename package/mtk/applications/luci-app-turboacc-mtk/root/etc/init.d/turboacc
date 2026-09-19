@@ -79,12 +79,14 @@ _uci_bool_enabled() {
 	return 1
 }
 
+# FullCone is implemented by the kernel conntrack NAT mode sysctl
+# (/proc/sys/net/netfilter/nf_conntrack_nat_mode, consumed in
+# nf_nat_masquerade.c).  That code path treats any non-zero value as "enabled",
+# and the kernel's own default is 1, so 1 is the accurate default here.  The
+# former xt_FULLCONENAT.ko probe is gone: TurboACC never loaded or called that
+# xtables target, and its kmod-ipt-fullconenat dependency has been dropped.
 default_fullcone_mode() {
-	if [ -e "/lib/modules/$(uname -r)/xt_FULLCONENAT.ko" ]; then
-		printf '1\n'
-	else
-		printf '2\n'
-	fi
+	printf '1\n'
 }
 
 # ---------------------------------------------------------------------------

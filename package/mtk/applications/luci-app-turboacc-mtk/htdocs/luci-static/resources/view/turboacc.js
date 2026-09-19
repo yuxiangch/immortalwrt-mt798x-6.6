@@ -98,7 +98,7 @@ function isEngineAvailable(flag, config, key) {
 }
 
 function getDefaultFullcone(features) {
-	return features && features.hasXTFULLCONENAT ? '1' : '2';
+	return '1';
 }
 
 function getConfigState(features) {
@@ -194,8 +194,6 @@ function getRuntimeLabel(token) {
 	case 'MediaTek HWNAT':
 	case 'MediaTek HNAT':
 		return _('MediaTek HNAT');
-	case 'xt_FULLCONENAT':
-		return _('XT_FULLCONE_NAT');
 	case 'Boardcom Fullcone':
 		return _('Boardcom_FULLCONE_NAT');
 	case 'Ethernet HNAT Disabled':
@@ -242,7 +240,7 @@ function buildStatusMeta(value, emptyDetail, activeDetail) {
 function getFullconeConfigLabel(value) {
 	switch (trimValue(value)) {
 	case '1':
-		return _('XT_FULLCONE_NAT (better compatibility)');
+		return _('Boardcom_FULLCONE_NAT');
 	case '2':
 		return _('Boardcom_FULLCONE_NAT (legacy compatibility)');
 	default:
@@ -834,7 +832,7 @@ function renderTelemetryGrid(state, health) {
 					renderFeatureTag(features.hasFASTCLASSIFIER, _('Fast classifier')),
 					renderFeatureTag(features.hasSHORTCUTFECM, _('SFE')),
 					renderFeatureTag(features.hasMEDIATEKHNAT, _('HNAT')),
-					renderFeatureTag(features.hasXTFULLCONENAT, _('FullCone')),
+					renderFeatureTag(features.hasFullConeNAT, _('FullCone')),
 					renderFeatureTag(features.hasIPV6, _('IPv6'))
 				]),
 				renderInfoGrid([
@@ -842,7 +840,7 @@ function renderTelemetryGrid(state, health) {
 					[ _('Fast classifier'), renderFeatureTag(features.hasFASTCLASSIFIER) ],
 					[ _('SFE connection manager'), renderFeatureTag(features.hasSHORTCUTFECM) ],
 					[ _('MediaTek HNAT'), renderFeatureTag(features.hasMEDIATEKHNAT) ],
-					[ _('XT_FULLCONE_NAT'), renderFeatureTag(features.hasXTFULLCONENAT) ],
+					[ _('Boardcom_FULLCONE_NAT'), renderFeatureTag(features.hasFullConeNAT) ],
 					[ _('Kernel IPv6 stack'), renderFeatureTag(features.hasIPV6) ]
 				])
 			])
@@ -1162,9 +1160,8 @@ function buildForm(features, config) {
 	o = s.taboption('experience', form.ListValue, 'fullcone', _('Full cone NAT'),
 		_('Enable for gaming or P2P needs.'));
 	o.value('0', _('Disable'));
-	if (features.hasXTFULLCONENAT || config.fullcone === '1')
-		o.value('1', _('XT_FULLCONE_NAT'));
-	o.value('2', _('Boardcom_FULLCONE_NAT'));
+	o.value('1', _('Boardcom_FULLCONE_NAT'));
+	o.value('2', _('Boardcom_FULLCONE_NAT (legacy compatibility)'));
 	o.default = config.fullcone || getDefaultFullcone(features);
 	o.widget = 'select';
 	o.rmempty = false;
