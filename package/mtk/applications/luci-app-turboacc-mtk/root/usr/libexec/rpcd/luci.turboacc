@@ -84,10 +84,7 @@ local methods = {
 	getFastPathStat = {
 		call = function()
 			local fptype
-			if fs.access("/sys/module/xt_FLOWOFFLOAD/refcnt") and
-			(readfile("/sys/module/xt_FLOWOFFLOAD/refcnt") or "0") ~= "0" then
-				fptype = "Flow offloading"
-			elseif fs.stat("/sys/module/fast_classifier", "type") == "dir" then
+			if fs.stat("/sys/module/fast_classifier", "type") == "dir" then
 				fptype = "Fast classifier"
 			elseif fs.stat("/sys/module/shortcut_fe_cm", "type") == "dir" then
 				fptype = "Shortcut-FE CM"
