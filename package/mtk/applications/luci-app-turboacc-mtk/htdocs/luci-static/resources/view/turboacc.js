@@ -1161,7 +1161,6 @@ function buildForm(features, config) {
 		_('Enable for gaming or P2P needs.'));
 	o.value('0', _('Disable'));
 	o.value('1', _('Kernel Full Cone NAT'));
-	o.value('2', _('Kernel Full Cone NAT (legacy compatibility)'));
 	o.default = config.fullcone || getDefaultFullcone(features);
 	o.widget = 'select';
 	o.rmempty = false;
