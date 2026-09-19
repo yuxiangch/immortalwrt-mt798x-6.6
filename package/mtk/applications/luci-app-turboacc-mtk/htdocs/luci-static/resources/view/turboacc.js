@@ -241,8 +241,6 @@ function getFullconeConfigLabel(value) {
 	switch (trimValue(value)) {
 	case '1':
 		return _('Kernel Full Cone NAT');
-	case '2':
-		return _('Kernel Full Cone NAT (legacy compatibility)');
 	default:
 		return _('Disabled');
 	}
