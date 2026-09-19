@@ -8,5 +8,14 @@ uci -q batch <<-EOF >/dev/null 2>&1
 	delete AdGuardHome.AdGuardHome.ucitracktest
 EOF
 
+# One-time cleanup: the removed legacy iptables redirect mode used to register
+# this firewall include pointing at /usr/share/AdGuardHome/firewall.start, which
+# no longer exists.  Drop only that section, and only when it is actually
+# present, so a system without /etc/config/firewall is left untouched.
+if uci -q get firewall.AdGuardHome >/dev/null 2>&1; then
+	uci -q delete firewall.AdGuardHome
+	uci -q commit firewall
+fi
+
 rm -f /tmp/luci-indexcache
 exit 0

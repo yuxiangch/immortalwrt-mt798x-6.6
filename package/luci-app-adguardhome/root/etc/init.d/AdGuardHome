@@ -5,8 +5,6 @@ USE_PROCD=1
 START=95
 STOP=01
 
-ipt=$(command -v iptables-legacy || command -v iptables)
-ip6t=$(command -v ip6tables-legacy || command -v ip6tables)
 CONFIGURATION=AdGuardHome
 CRON_FILE=/etc/crontabs/root
 EXTRA_COMMANDS="do_redirect testbackup test_crontab force_reload isrunning"
@@ -61,72 +59,8 @@ stop_forward_dnsmasq()
 	/etc/init.d/dnsmasq restart
 }
 
-set_iptable()
-{
-	local ipv6_server=$1
-	local tcp_server=$2
-	uci -q batch <<-EOF >/dev/null 2>&1
-	delete firewall.AdGuardHome
-	set firewall.AdGuardHome=include
-	set firewall.AdGuardHome.type=script
-	set firewall.AdGuardHome.path=/usr/share/AdGuardHome/firewall.start
-	set firewall.AdGuardHome.reload=1
-	commit firewall
-EOF
-
-	IPS="`ifconfig | grep "inet addr" | grep -v ":127" | grep "Bcast" | awk '{print $2}' | awk -F : '{print $2}'`"
-	for IP in $IPS
-	do
-		if [ "$tcp_server" == "1" ]; then
-			$ipt -t nat -A PREROUTING -p tcp -d $IP --dport 53 -j REDIRECT --to-ports $AdGuardHome_PORT >/dev/null 2>&1
-		fi
-		$ipt -t nat -A PREROUTING -p udp -d $IP --dport 53 -j REDIRECT --to-ports $AdGuardHome_PORT >/dev/null 2>&1
-	done
-
-	if [ "$ipv6_server" == 0 ]; then
-		return
-	fi
-
-	IPS="`ifconfig | grep "inet6 addr" | grep -v " fe80::" | grep -v " ::1" | grep "Global" | awk '{print $3}'`"
-	for IP in $IPS
-	do
-		if [ "$tcp_server" == "1" ]; then
-			$ipt -t nat -A PREROUTING -p tcp -d $IP --dport 53 -j REDIRECT --to-ports $AdGuardHome_PORT >/dev/null 2>&1
-		fi
-		$ipt -t nat -A PREROUTING -p udp -d $IP --dport 53 -j REDIRECT --to-ports $AdGuardHome_PORT >/dev/null 2>&1
-	done
-}
-
-clear_iptable()
-{
-	uci -q batch <<-EOF >/dev/null 2>&1
-	delete firewall.AdGuardHome
-	commit firewall
-EOF
-	local OLD_PORT="$1"
-	local ipv6_server=$2
-	IPS="`ifconfig | grep "inet addr" | grep -v ":127" | grep "Bcast" | awk '{print $2}' | awk -F : '{print $2}'`"
-	for IP in $IPS
-	do
-		$ipt -t nat -D PREROUTING -p udp -d $IP --dport 53 -j REDIRECT --to-ports $OLD_PORT >/dev/null 2>&1
-		$ipt -t nat -D PREROUTING -p tcp -d $IP --dport 53 -j REDIRECT --to-ports $OLD_PORT >/dev/null 2>&1
-	done
-
-	if [ "$ipv6_server" == 0 ]; then
-		return
-	fi
-	echo "warn ip6tables nat mod is needed"
-	IPS="`ifconfig | grep "inet6 addr" | grep -v " fe80::" | grep -v " ::1" | grep "Global" | awk '{print $3}'`"
-	for IP in $IPS
-	do
-		$ipt -t nat -D PREROUTING -p udp -d $IP --dport 53 -j REDIRECT --to-ports $OLD_PORT >/dev/null 2>&1
-		$ipt -t nat -D PREROUTING -p tcp -d $IP --dport 53 -j REDIRECT --to-ports $OLD_PORT >/dev/null 2>&1
-	done
-}
-
 service_triggers() {
 	procd_add_reload_trigger "$CONFIGURATION"
-	[ "$(uci get AdGuardHome.AdGuardHome.redirect)" == "redirect" ] && procd_add_reload_trigger firewall
 }
 
 isrunning(){
@@ -225,8 +159,6 @@ _do_redirect()
 {
 	local section="$CONFIGURATION"
 	args=""
-	ipv6_server=1
-	tcp_server=0
 	enabled=$1
 	if [ "$enabled" == "1" ]; then
 		echo -n "1">/var/run/AdGredir
@@ -253,17 +185,11 @@ _do_redirect()
 
 	if [ "$old_redirect" != "$redirect" ] || [ "$old_port" != "$AdGuardHome_PORT" ] || [ "$old_enabled" = "1" -a "$enabled" = "0" ]; then
 		if [ "$old_redirect" != "none" ]; then
-			if [  "$old_redirect" == "redirect" -a "$old_port" != "0" ]; then
-				clear_iptable "$old_port" "$ipv6_server"
-			elif [ "$old_redirect" == "dnsmasq-upstream" ]; then
+			if [ "$old_redirect" == "dnsmasq-upstream" ]; then
 				stop_forward_dnsmasq "$old_port"
 			elif [ "$old_redirect" == "exchange" ]; then
 				rm_port53
 			fi
-		fi
-	elif [ "$old_enabled" = "1" -a "$enabled" = "1" ]; then
-		if [  "$old_redirect" == "redirect" -a "$old_port" != "0" ]; then
-			clear_iptable "$old_port" "$ipv6_server"
 		fi
 	fi
 	uci delete AdGuardHome.@AdGuardHome[0].old_redirect 2>/dev/null
@@ -277,9 +203,7 @@ _do_redirect()
 	if [ "$AdGuardHome_PORT" == "0" ]; then
 		return 1
 	fi
-	if [ "$redirect" = "redirect" ]; then
-		set_iptable $ipv6_server $tcp_server
-	elif [ "$redirect" = "dnsmasq-upstream" ]; then
+	if [ "$redirect" = "dnsmasq-upstream" ]; then
 		set_forward_dnsmasq "$AdGuardHome_PORT"
 	elif [ "$redirect" == "exchange" -a "$(uci get dhcp.@dnsmasq[0].port 2>/dev/null)" == "53" ]; then
 		use_port53
