@@ -194,8 +194,8 @@ function getRuntimeLabel(token) {
 	case 'MediaTek HWNAT':
 	case 'MediaTek HNAT':
 		return _('MediaTek HNAT');
-	case 'Boardcom Fullcone':
-		return _('Boardcom_FULLCONE_NAT');
+	case 'Kernel Full Cone NAT':
+		return _('Kernel Full Cone NAT');
 	case 'Ethernet HNAT Disabled':
 		return _('Ethernet HNAT disabled');
 	case 'HNAT Partially Enabled':
@@ -240,9 +240,9 @@ function buildStatusMeta(value, emptyDetail, activeDetail) {
 function getFullconeConfigLabel(value) {
 	switch (trimValue(value)) {
 	case '1':
-		return _('Boardcom_FULLCONE_NAT');
+		return _('Kernel Full Cone NAT');
 	case '2':
-		return _('Boardcom_FULLCONE_NAT (legacy compatibility)');
+		return _('Kernel Full Cone NAT (legacy compatibility)');
 	default:
 		return _('Disabled');
 	}
@@ -840,7 +840,7 @@ function renderTelemetryGrid(state, health) {
 					[ _('Fast classifier'), renderFeatureTag(features.hasFASTCLASSIFIER) ],
 					[ _('SFE connection manager'), renderFeatureTag(features.hasSHORTCUTFECM) ],
 					[ _('MediaTek HNAT'), renderFeatureTag(features.hasMEDIATEKHNAT) ],
-					[ _('Boardcom_FULLCONE_NAT'), renderFeatureTag(features.hasFullConeNAT) ],
+					[ _('Kernel Full Cone NAT'), renderFeatureTag(features.hasFullConeNAT) ],
 					[ _('Kernel IPv6 stack'), renderFeatureTag(features.hasIPV6) ]
 				])
 			])
@@ -1160,8 +1160,8 @@ function buildForm(features, config) {
 	o = s.taboption('experience', form.ListValue, 'fullcone', _('Full cone NAT'),
 		_('Enable for gaming or P2P needs.'));
 	o.value('0', _('Disable'));
-	o.value('1', _('Boardcom_FULLCONE_NAT'));
-	o.value('2', _('Boardcom_FULLCONE_NAT (legacy compatibility)'));
+	o.value('1', _('Kernel Full Cone NAT'));
+	o.value('2', _('Kernel Full Cone NAT (legacy compatibility)'));
 	o.default = config.fullcone || getDefaultFullcone(features);
 	o.widget = 'select';
 	o.rmempty = false;

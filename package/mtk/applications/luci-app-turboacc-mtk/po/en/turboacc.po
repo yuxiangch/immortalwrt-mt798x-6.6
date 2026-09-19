@@ -47,6 +47,14 @@ msgstr "Fill in ip to enable AP Mode(reboot needed)"
 msgid "HNAT bind rate threshold (pps)"
 msgstr "HNAT bind rate threshold (pps)"
 
+#: applications/luci-app-turboacc/htdocs/luci-static/resources/view/turboacc.js
+msgid "Kernel Full Cone NAT"
+msgstr "Kernel Full Cone NAT"
+
+#: applications/luci-app-turboacc/htdocs/luci-static/resources/view/turboacc.js
+msgid "Kernel Full Cone NAT (legacy compatibility)"
+msgstr "Kernel Full Cone NAT (legacy compatibility)"
+
 #: applications/luci-app-turboacc/htdocs/luci-static/resources/view/turboacc.js:184
 msgid "The smaller the threshold, the easier it is for the connection to be accelerated."
 msgstr "The smaller the threshold, the easier it is for the connection to be accelerated."

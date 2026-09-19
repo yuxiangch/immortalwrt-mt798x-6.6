@@ -69,6 +69,14 @@ msgstr "填写IP将启动AP模式（同网段不重复ip，需重启后生效。
 msgid "HNAT bind rate threshold (pps)"
 msgstr "HNAT连接速率绑定阈值(pps)"
 
+#: applications/luci-app-turboacc/htdocs/luci-static/resources/view/turboacc.js
+msgid "Kernel Full Cone NAT"
+msgstr "内核 Full Cone NAT"
+
+#: applications/luci-app-turboacc/htdocs/luci-static/resources/view/turboacc.js
+msgid "Kernel Full Cone NAT (legacy compatibility)"
+msgstr "内核 Full Cone NAT（旧值兼容）"
+
 #: applications/luci-app-turboacc/htdocs/luci-static/resources/view/turboacc.js:184
 msgid "The smaller the threshold, the easier it is for the connection to be accelerated."
 msgstr "阈值越小，连接越容易被加速。"

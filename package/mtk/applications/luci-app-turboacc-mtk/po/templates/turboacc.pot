@@ -358,6 +358,14 @@ msgid "Kept for legacy configs; current firmware prefers HNAT, skips automatical
 msgstr ""
 
 #: applications/luci-app-turboacc/htdocs/luci-static/resources/view/turboacc.js
+msgid "Kernel Full Cone NAT"
+msgstr ""
+
+#: applications/luci-app-turboacc/htdocs/luci-static/resources/view/turboacc.js
+msgid "Kernel Full Cone NAT (legacy compatibility)"
+msgstr ""
+
+#: applications/luci-app-turboacc/htdocs/luci-static/resources/view/turboacc.js
 msgid "Kernel IPv6 stack"
 msgstr ""
 

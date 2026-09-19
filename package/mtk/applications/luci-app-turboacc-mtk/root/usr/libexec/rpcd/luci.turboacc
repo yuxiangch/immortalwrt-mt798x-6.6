@@ -112,7 +112,7 @@ local methods = {
 			local fctype
 			if fs.access("/proc/sys/net/netfilter/nf_conntrack_nat_mode") and
 				(readfile("/proc/sys/net/netfilter/nf_conntrack_nat_mode") or "0") ~= "0" then
-				fctype = "Boardcom Fullcone"
+				fctype = "Kernel Full Cone NAT"
 			end
 			print(json.stringify({ type = fctype }))
 		end
