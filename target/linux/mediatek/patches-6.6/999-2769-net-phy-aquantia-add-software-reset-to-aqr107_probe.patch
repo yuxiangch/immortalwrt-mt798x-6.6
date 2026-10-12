@@ -50,7 +50,7 @@ index 4214d8c..96f5c02 100644
  static int aqr107_probe(struct phy_device *phydev)
  {
  	phydev->priv = devm_kzalloc(&phydev->mdio.dev,
-@@ -809,6 +834,8 @@ static int aqr107_probe(struct phy_device *phydev)
+@@ -809,7 +834,9 @@ static int aqr107_probe(struct phy_device *phydev)
  	if (!phydev->priv)
  		return -ENOMEM;
  
@@ -58,7 +58,8 @@ index 4214d8c..96f5c02 100644
 +
  	aqr_firmware_load(phydev);
  
- 	aqr_mib_probe(phydev);
+ 	return aqr_hwmon_probe(phydev);
+ }
 -- 
 2.45.2
 
